@@ -50,6 +50,7 @@ Lets build something, lets say.. Searx:
 
 ```
 $ git clone git://github.com/asciimoo/searx
+$ cd searx
 $ git remote add builder http://user:user@localhost:5000/user/searx
 $ git push builder master:latest
 ```
