@@ -60,6 +60,7 @@ repos.on('push', function (push) {
 
     push.on('response', function(response) {
         rl.on('line', (line) => {
+            console.info(`${push.repo}: ${line}`);
             if (line && line.length != 0) {
                 line = `${('000' + ((line.length+6).toString(16))).slice(-4)}\x02${line}\n`;
                 response.queue(line);
