@@ -16,23 +16,6 @@ options.port = process.env.PORT || options.port;
 options.username = process.env.USERNAME || options.username;
 options.password = process.env.PASSWORD || options.password;
 
-function rmDir(dirPath) {
-    let files = [];
-    try {
-        files = fs.readdirSync(dirPath);
-    } catch (e) {
-        return;
-    }
-    if (files.length > 0)
-        for (let i = 0; i < files.length; i++) {
-            let filePath = dirPath + '/' + files[i];
-            if (fs.statSync(filePath).isFile())
-                fs.unlinkSync(filePath);
-            else
-                rmDir(filePath);
-        }
-    fs.rmdirSync(dirPath);
-}
 
 function execCmd(cmds, logStream) {
     return new Promise(function(resolve) {
@@ -115,11 +98,8 @@ repos.on('push', function (push) {
             .pipe(logStream, {end: false});
 
         proc.on('exit', function (code) {
-            console.info(script+': '+code+'\n\n');
-            logStream.write(script+': '+code+'\n\n');
-            if (cwd.startsWith(options.repos)) {
-                rmDir(cwd);
-            }
+            console.info(`${script} exited with ${code}`);
+            logStream.write(`Build exited with ${code}`);
             if (repositories[push.repo].cmd) {
                 execCmd(repositories[push.repo].cmd, logStream)
                     .then(function() {
