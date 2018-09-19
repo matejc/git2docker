@@ -79,15 +79,19 @@ repos.on('push', function (push) {
 
         let registry = {};
         let spawnEnv = Object.create(process.env);
+        if (repositories[push.repo].extraBuildArgs) {
+            spawnEnv.EXTRA_BUILD_ARGS = repositories[push.repo].extraBuildArgs || '';
+        }
         if (repositories[push.repo].registry) {
             registry = repositories[push.repo].registry;
+            spawnEnv.REGISTRY = registry.host || '';
             spawnEnv.REGISTRY_USERNAME = registry.username || '';
             spawnEnv.REGISTRY_PASSWORD = registry.password || '';
         }
 
-        console.info(`spawn: ${script} ${push.repo} ${push.commit} ${push.branch} ${registry.host || ''}; cwd: ${cwd}`);
+        console.info(`spawn: ${script} ${push.repo} ${push.commit} ${push.branch} ${repositories[push.repo].build || '.'}; cwd: ${cwd}`);
 
-        let proc = spawn(script, [push.repo, push.commit, push.branch, registry.host || ''], {cwd: cwd, env: spawnEnv});
+        let proc = spawn(script, [push.repo, push.commit, push.branch, repositories[push.repo].build || '.'], {cwd: cwd, env: spawnEnv});
 
         // proc.stdout.setEncoding('utf8');
         proc.stdout

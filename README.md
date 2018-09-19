@@ -26,6 +26,8 @@ You can also override options by specifying following environment variables: `PO
 ```js
 {
   "user/searx": {
+    "extraBuildArgs": "--build-arg A=123",
+    "build": "",  // relative location of Dockerfile
     "registry": {
       "host": "my.private.registry.com:5000",
       "username": "your-username",

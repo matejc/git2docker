@@ -5,7 +5,7 @@ set -e
 NAME="$1"
 COMMIT="$2"
 REV="$3"
-REGISTRY="$4"
+BUILD="$4"
 REPO="$PWD"
 SRC="$REPO-$COMMIT-src"
 
@@ -41,7 +41,7 @@ test -z "$REGISTRY" || {
     TAGS="$TAGS --tag=$REGISTRY/$NAME:$REV";
 }
 
-docker build $TAGS "$SRC"
+docker build $EXTRA_BUILD_ARGS $TAGS "$SRC/$BUILD"
 
 if [[ -z "$REGISTRY" ]]
 then
